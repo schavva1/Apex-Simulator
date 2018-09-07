@@ -1,0 +1,51 @@
+Note these points while running the program:
+
+1.	I implemented only 5 stage pipeline.
+2.	I tried implementing multi-stage but couldnot get output. 
+
+Following are the structures which I have used:
+struct Code_Line       : contains structure members instruction_string,address
+struct Code_Memory     : contains structure members 'Code_Line code' array consisting of 100 elements
+struct Data_Memory     : contains base address and data memory members
+struct Register        : contains register value and status of bool type
+struct Register_File   : contains array of struct registers
+struct Instruction_info: contains each instruction info like source reg, destination register,
+struct stage           : contains Input_Instruction,Output_Instruction of type  Instruction_info*
+
+
+
+
+Following are the functions which I have used which can be considered as stages:
+
+void fetch(stage* Fetch, stage* Decode)
+void decode(stage* Decode,stage* Fetch, stage* Execute)
+void execute(stage* Decode,stage* Execute,Register_File* re, stage* Memory)
+void memory(stage* Execute,stage* Memory,Register_File* re, Data_Memory* dm, stage* WriteBack)
+void writeback(stage* WriteBack,stage* Memory,Register_File* re, Data_Memory* dm)
+
+
+
+Step1: The user should give which stage to be implemented among initialisation, simulation and display.
+
+Step2: If the stage selected is 'initialisation' the code first reads the sample input file and displays the text on the console. Now it initialises all register and data memomry values to zero.
+   
+Step3: If the stage selected is 'simulation' it prompts user for the number of cycles to be executed.
+       1.Since the I am calling the functions in reverse order writeback will be called first and then the order follows and no operations will be performed at this stage till it completes 5 clock cycles.At the 		5th clock cycle writeback actually starts functioning.
+   
+       2.The Instruction moves to fetch stage which is called by fetch function and first instruction gets fetched and control flows back to main function which enters into decode stage.Now the pc value gets     		 incremented by 4.
+
+       3.When the first instruction enters into decode stage, instruction  is split into opcode and operands.The operands will be converted to int type from string type.It decodes and identifies the respective 		 source, destination and register values.
+
+       4.In execute stage, the corresponding ALU operations will be performed by just passing all the literal and source register values and output values are computed.
+
+       5.In Memory stage, if the input instruction fetched is either LOAD or STORE then the corresponding target memory address calculations are computed.All ALU Instructions will just be passed from Memory to   		 writeback.Since STORE is reg-> mem operation, the register value will be written to target memory adress.
+       6.In write back stage, all the computed values will be written to destination registers.
+       
+step4: If the stage selected is display, then it displays all the register values and values in data memory locations at the end of clock cycles.
+
+
+      
+
+
+
+
